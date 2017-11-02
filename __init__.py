@@ -1,5 +1,6 @@
-from flask import Flask, render_template, flash, request, url_for, redirect, request, session 
+from flask import Flask, render_template, flash, request, url_for, redirect, request, session, make_response 
 from wtforms import Form, BooleanField, TextField, PasswordField, validators
+from datetime import datetime,timedelta
 from passlib.hash import sha256_crypt
 from MySQLdb import escape_string as thwart
 import gc
@@ -33,7 +34,16 @@ def dashboard():
     flash("This is a Flask Notification!")
     return render_template("dashboard.html", APP_CONTENT = APP_CONTENT)
   
-
+@app.route('/introduction-to-app/')
+def introapp():
+    try:
+        output = ['Digit 400 is good !', 'Python, java, php,\ C++ ','<p><strong>Hello World! <strong><p>',42, '42']
+        
+        return render_template("templating_demo.html", output = output)
+    
+    except Exception as e:
+        return(str(e))
+    
 @app.route("/login/", methods = ["GET", "POST"])
 def login():
     error = ''
@@ -129,8 +139,27 @@ def register_page():
         return(str(e))
 
 
+@app.route('/sitemap.xml/', methods=['GET'])
+def sitemap():
+    try:
+        pages = []
+        week = (datetime.now() - timedelta(days = 7)).date().isoformat()
+        for rule in app.url_map.iter_rules():
+            if "GET" in rule.methods and len(rule.arguments)==0:
+                pages.append(
+                    ["http://174.138.86.46"+str(rule.rule),week]
+                )
+        sitemap_xml = render_template('sitemap_template.xml', pages = pages)
+        response = make_response(sitemap_xml)
+        response.headers["Content-Type"] = "application/xml"
+        return response
+    except Exception as e:
+        return(str(e))    
     
-    
+@app.route('/robots.txt/')
+def robots():
+    #return("User-agent: *\nDisallow /") #Disallows all robot traffic
+    return("User-agent: *\nDisallow: /register/\nDisallow: /login/") #Disallows robot traffic to sensitive urls
     
     
     
