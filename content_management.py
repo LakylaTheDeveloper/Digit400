@@ -1,8 +1,10 @@
 def Content():
     APP_CONTENT = {
-        "Home":[["Welcome to MyApp!","/introduction-to-app/"],
-             ["What are the Issues?","/background/"],
-             ["Connect with the Community","/messages/"]],
+        "Home":[["jinja templating","/introduction-to-app/"],
+             ["File Uploads","/uploads/"],
+             ["Download","/download/"],
+               ["Downloader Page", "/downloader/"],
+               ["jsonstuff", "/jsonify/"]],
         "Profile":[["User Profile","/profile/"]],
         "Messages":[["Messages","/messages/"]],
         "Settings":[["Terms of Service","/tos/"]]

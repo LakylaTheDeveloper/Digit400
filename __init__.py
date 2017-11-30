@@ -1,4 +1,4 @@
-from flask import Flask, render_template, flash, request, url_for, redirect, request, session, make_response 
+from flask import Flask, render_template, flash, request, url_for, redirect, request, session, make_response, send_file, send_from_directory, jsonify
 from wtforms import Form, BooleanField, TextField, PasswordField, validators
 from datetime import datetime,timedelta
 from passlib.hash import sha256_crypt
@@ -9,7 +9,13 @@ from content_management import Content
 from db_connect import connection
 APP_CONTENT = Content()
 
-app = Flask(__name__)
+
+UPLOAD_FOLDER = '/var/www/FlaskApp/FlaskApp/uploads'
+ALLOWED_EXTENTIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
+
+
+app = Flask(__name__, instance_path='/var/www/FlaskApp/FlaskApp/uploads')
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 def login_required(f):
     @wraps(f)
@@ -21,13 +27,14 @@ def login_required(f):
             return redirect(url_for('login'))
     return wrap
 
+#upload file checker: "never trust user input"
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 @app.route("/", methods = ["GET", "POST"])
 def main():
     return render_template("main.html")
-   
-    
-    
+
 @app.route("/dashboard/")
 @login_required
 def dashboard():
@@ -35,6 +42,7 @@ def dashboard():
     return render_template("dashboard.html", APP_CONTENT = APP_CONTENT)
   
 @app.route('/introduction-to-app/')
+@login_required
 def introapp():
     try:
         output = ['Digit 400 is good !', 'Python, java, php,\ C++ ','<p><strong>Hello World! <strong><p>',42, '42']
@@ -43,7 +51,78 @@ def introapp():
     
     except Exception as e:
         return(str(e))
+
+@app.route('/background_process/')
+@login_required
+def background_process():
+    try:
+        lang = request.args.get('proglang', 0, type=str)
+        if lang.lower() == 'python':
+            return jsonify(result="You are wise!")
+        else:
+            return jsonify(result='try again.')
+    except Exeption as e:
+        return str(e)
     
+@app.route('/jsonify/', methods=['GET', 'POST'])
+@login_required
+def json_stuff():
+    return render_template("jsonify.html")
+    
+	
+
+    
+@app.route('/uploads/', methods=['GET', 'POST'])
+@login_required
+def upload_file():
+    try:
+        if request.method == 'POST':
+            # check if the post request has the file part
+            if 'file' not in request.files:
+                flash ('No file part')
+                return redirect(request.url)
+            file = request.file['file']
+            # if user does not select file, brower also summit a empty part without filename
+            if file.filename == '':
+                flash('No Selected file')
+                return redirect(request.url)
+            if file and allowed_file(file.filename):
+                filename = secure_filename(file.filename)
+                file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                flash('File upload successful')
+                return render_template('uploads.html', filename = filename)
+        return render_template('uploads.html')
+    except:
+        flash("please upload a vaild file")
+        return render_template('uploads.html')
+
+@app.route('/download/')
+@login_required
+def download():
+	try:
+		return send_file('/var/www/FlaskApp/FlaskApp/uploads/screencap.png', attachment_filename='screencap.png')
+	except Exception as e:
+		return str(e)
+
+@app.route('/downloader/', methods=['GET', 'POST'])
+@login_required
+def downloader():
+    error = ''
+    try:
+        if request.method == "POST":
+            filename = request.form['filename']
+            return send_file('/var/www/FlaskApp/FlaskApp/uploads/' + filename, attachment_filename='download')
+
+        else:
+            return render_template('downloader.html', error = error)
+        error = "Please enter a valid file name"
+        return render_template('downloader.html',error = error)
+
+    except:
+        error = "Please enter a valid file name"
+        return render_template('downloader.html',error = error)
+
+
 @app.route("/login/", methods = ["GET", "POST"])
 def login():
     error = ''
@@ -161,7 +240,9 @@ def robots():
     #return("User-agent: *\nDisallow /") #Disallows all robot traffic
     return("User-agent: *\nDisallow: /register/\nDisallow: /login/") #Disallows robot traffic to sensitive urls
     
-    
+@app.route('/about/')
+def about():
+    return render_template("about.html")
     
     
 @app.errorhandler(404)

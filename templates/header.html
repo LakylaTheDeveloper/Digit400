@@ -34,6 +34,9 @@ $('#myInput').focus()
 </head>
 
 <header>
+    
+    
+    
 <!-- Nav -->
 <ul class="nav justify-content-end">
 <li class="nav-item">
@@ -46,18 +49,23 @@ $('#myInput').focus()
 </li>
   <li class="nav-item">
 <a class="nav-link" href="/logout/"><img src="{{ url_for('static', filename='open-iconic/svg/account-logout.svg')}}" width="20em"> Logout</a>
-</li>   
+</li>
+<li class="nav-item">
+	<a class="nav-link" href="/">Home</a>
+	</li>    
 {% else %}
 <li class="nav-item">
 <a class="nav-link" href="/login/"><img src="{{ url_for('static', filename='open-iconic/svg/account-login.svg')}}" width="20em"> Login</a>
 </li>
 
 <li class="nav-item">
-<a class="nav-link" href="/about/">About</a>
+<a class="nav-link" href="/">Home</a>
 </li>
-{% endif %}    
-</ul>
 
+{% endif %}    
+
+    
+    
 <!-- Login Model -->
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 <div class="modal-dialog">
@@ -86,6 +94,8 @@ $('#myInput').focus()
 </div>
 </div><!-- END Login Model -->
 </header>
+    
+    
 <body>
 
 <div class="container-fluid" style="min-height: 100%;">
