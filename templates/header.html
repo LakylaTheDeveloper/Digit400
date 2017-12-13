@@ -7,7 +7,7 @@
 <!-- Local Bootstrap CSS -->
 <link href="{{ url_for('static',filename='css/bootstrap.min.css') }}" rel="stylesheet">
 <!-- Custom CSS-->
-<link href="{{ url_for('static',filename='css/style.css') }}" rel="stylesheet">    
+<link href="{{ url_for('static',filename='css/style.css') }}" rel="stylesheet">  
 <!-- CDN Bootstrap CSS -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
 <!-- Favicon link -->
@@ -43,25 +43,23 @@ $('#myInput').focus()
 <a class="nav-link active" href="/"><img style="max-width:120px; margin-top: -17px;" src="{{ url_for('static', filename='images/mainlogo.png') }}">
 </a>
 </li>
+<li class="nav-item">
+<a class="nav-link" href="/">Home</a>
+</li>
 {% if session.logged_in %}
+<li class="nav-item">
+<a class="nav-link" href="/buy/">Buy</a>
+</li>
 <li class="nav-item">
 <a href="/dashboard/"><button type="button" class="btn btn-primary" aria-label="Left Align" style="margin-top: 5px; margin-bottom: 5px;"> Dashboard </button></a>
 </li>
   <li class="nav-item">
 <a class="nav-link" href="/logout/"><img src="{{ url_for('static', filename='open-iconic/svg/account-logout.svg')}}" width="20em"> Logout</a>
-</li>
-<li class="nav-item">
-	<a class="nav-link" href="/">Home</a>
-	</li>    
+</li>    
 {% else %}
 <li class="nav-item">
 <a class="nav-link" href="/login/"><img src="{{ url_for('static', filename='open-iconic/svg/account-login.svg')}}" width="20em"> Login</a>
 </li>
-
-<li class="nav-item">
-<a class="nav-link" href="/">Home</a>
-</li>
-
 {% endif %}    
 
     

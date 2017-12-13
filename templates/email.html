@@ -1,0 +1,44 @@
+{% extends "header.html" %}
+{% block body %}
+
+<h1>Contact Me</h1>
+<body>
+<?php
+if(isset($_POST['submit']))(
+            $msg='First Name: ' .$_POST['fname'] ."\n"
+                .'Last Name: ' .$_POST['lname'] ."\n"
+                .'Email: ' .$_POST['email'] ."\n"
+                .'Message: ' .$_POST['subject'];
+            mail('lakylao@yahoo.com', 'Sample contact me form', $msg);
+            header('location: contacct-u-thank-you.php');
+            
+        )
+        else(
+        header('location: contact-us.php');
+            exit(0);
+        )
+
+
+
+?>
+    <div class="container">
+  <form action="/action_page.php">
+
+    <label for="fname">First Name</label>
+    <input type="text" id="fname" name="firstname" placeholder="Your name..">
+
+    <label for="lname">Last Name</label>
+    <input type="text" id="lname" name="lastname" placeholder="Your last name..">
+
+    <label for="email">Email</label>
+     <input type="text" id="email" name="Email Address" placeholder="Your email addrress..">
+
+    <label for="subject">Subject</label>
+    <textarea id="subject" name="subject" placeholder="Write something.." style="height:200px"></textarea>
+
+    <input type="submit" value="Submit">
+
+  </form>
+</div>
+</body>
+{% endblock %}

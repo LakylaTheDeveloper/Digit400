@@ -35,6 +35,22 @@ def allowed_file(filename):
 def main():
     return render_template("main.html")
 
+@app.route("/demo/", methods = ["GET", "POST"])
+def demo():
+    return render_template("game.html")
+
+@app.route("/buy/", methods = ["GET", "POST"])
+@login_required
+def buy():
+    return render_template("buy.html")
+
+@app.route("/mail/", methods = ["GET", "POST"])
+def email():
+    try:
+        return render_template("email.html")
+    except Exception as e:
+        return(str(e))
+
 @app.route("/dashboard/")
 @login_required
 def dashboard():
